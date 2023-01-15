@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ClassTable</title>
+	<script src="test.js"></script>
+    <style>
+        td{
+            /* border: 1px solid; */
+            border-radius: 3px;
+            border-color: currentColor;
+            height: 100%;
+        }
+        .kb{
+            border-radius: 7px;
+            background: chocolate;
+            
+            margin: 2px;
+        }
+        teacher,classname,place{
+            height: 100%;
+            display: block;
+            text-align: center;
+        }
+        th{
+            border-radius: 7px;
+        }
+        .day{
+            background:burlywood;
+        }
+        .time{
+            text-align: right;
+            background: linear-gradient(to bottom right,rgb(29, 198, 122),rgb(113, 99, 101));
+            border-radius: 7px;
+        }
+    </style>
+</head>
+<body>
+    <div class="classtable">
+        <table >
+            <tbody>
+                <tr class="day">
+                    <th></th>
+                    <th>周一</th>
+                    <th>周二</th>
+                    <th>周三</th>
+                    <th>周四</th>
+                    <th>周五</th>
+                    <th>周六</th>
+                    <th>周日</th>
+                </tr>
+                <tr>
+                    <td class="time">第1、2节课</td>
+                </tr>
+                <tr>
+                    <td class="time">第3、4节课</td>
+                </tr>
+                <tr>
+                    <td class="time">第5、6节课</td>
+                </tr>
+                <tr>
+                    <td class="time">第7、8节课</td>
+                </tr>
+
+                <tr>
+                    <td class="time">第9、10、11节课</td>
+                </tr>
+
+                </tr>
+            </tbody>    
+        </table>
+    </div>
+    <script>
+        
+value = '[[[{"class":"大学外语1","teacher":"彭毅讲师（高校）","time":"14-16(周)","place":"逸夫楼-111"},{"class":"大学外语1","teacher":"彭毅讲师（高校）","time":"4-5,8-13(周)","place":"逸夫楼-304"}],[{"class":"高等数学Ⅰ1","teacher":"杨玉月副教授","time":"4-5,8-17(周)","place":"计算中心B202"}],[{"class":"大学生心理健康教育","teacher":"刘炼鑫讲师（高校）","time":"4-5,8-13(周)","place":"北山二阶梯"}],[{"class":"形势与政策1","teacher":"许善品副教授","time":"14-15(周)","place":"逸夫楼第二报告厅"}],[{"class":"中国近现代史纲要","teacher":"刘志靖副教授","time":"16(双周)","place":"逸夫楼-103"},{"class":"中国近现代史纲要","teacher":"刘志靖副教授","time":"4-5,8-15(周)","place":"逸夫楼-103"}]],[[{"class":"高级语言程序设计I","teacher":"李勃东教授","time":"14-17(周)","place":"计算中心B408"},{"class":"高级语言程序设计I","teacher":"李勃东教授","time":"4-5,8-13(周)","place":"计算中心B408"}],[],[{"class":"网络空间安全专业导学","teacher":"李澄清教授","time":"4-5,8-13(周)","place":"逸夫楼-101"}],[],[{"class":"线性代数Ⅰ","teacher":"成央金教授","time":"4-5,8-17(周)","place":"逸夫楼-301"}]],[[{"class":"高等数学Ⅰ1","teacher":"杨玉月副教授","time":"4-5,8-17(周)","place":"计算中心B202"}],[],[{"class":"线性代数Ⅰ","teacher":"成央金教授","time":"4-5,8-17(周)","place":"逸夫楼-103"}],[{"class":"创新创业基础1","teacher":"陈静高等学校教师","time":"14-17(周)","place":"逸夫楼-402"}],[]],[[{"class":"高级语言程序设计I","teacher":"李勃东教授","time":"4-5,8-13(周)","place":"计算中心B508"},{"class":"高级语言程序设计I","teacher":"李勃东教授","time":"14-17(周)","place":"计算中心B508"}],[],[],[{"class":"高等数学Ⅰ1","teacher":"杨玉月副教授","time":"4-5,8-17(周)","place":"计算中心B202"}],[{"class":"大学生职业生涯规划","teacher":"文磊讲师（高校）","time":"14-17(周)","place":"逸夫楼-201"}]],[[{"class":"大学外语1","teacher":"彭毅讲师（高校）","time":"4-5,8-18(周)","place":"逸夫楼-403"}],[{"class":"大学体育1","teacher":"邓园园","time":"4-5,8-18(周)","place":"体育馆"}],[{"class":"高等数学习题课","teacher":"杨玉月副教授","time":"11-18(周)","place":"计算中心B202"}],[{"class":"高等数学Ⅰ1","teacher":"杨玉月副教授","time":"4-5,8-17(周)","place":"逸夫楼-210"}],[]],[[],[],[],[],[]],[[],[],[],[],[]]]';
+
+attri = ["class","teacher","time","place"];
+
+function loadData(datas,startTime){
+
+    //这里需要对自己的网页进行适配
+    // todo 
+    var weekday= 7;
+    var array = JSON.parse(datas);//解析之后是二维数组，先是星期，厚实每一节课
+    var tdatas = [];
+    var table = document.getElementsByTagName("tr");
+    //向table中添加数据，并将控件的引用放在tdatas中
+    for (let i = 0; i < table.length; i++) {
+        var classes = [];
+        for (let j = 0; j < weekday; j++) {
+            var d = document.createElement("td");
+            //这里直接和当前的时间进行了比较，后面可以调整比较的时间
+            var weekcount = diffWeek(startTime,new Date());
+            d.appendChild( getLesson(array[j][i],weekcount));
+            classes.push(d);
+            table[i+1].appendChild(d);
+        }
+        tdatas.push(classes);
+    }   
+    return tdatas;
+
+}
+
+function diffWeek(d1,d2) {
+    var milseconds = d2.getTime() - d1.getTime();
+    var weekcount = milseconds/1000/60/60/24/7;
+    return weekcount;
+}
+/**
+ * 
+ * @param lesson 同一节课可能的所有课程
+ * @param weekcount 当前的周数
+ * @returns 返回一个HTML控件
+ */
+
+function getLesson(lesson,weekcount){
+    var content = document.createElement("div");
+    if(lesson==null){
+        return content;
+    }
+    if(lesson.length<=0){
+        return content;
+    }else{
+        
+        for (let index = 0; index < lesson.length; index++) {
+            const element = lesson[index];
+            var times = element[attri[2]].replace("(周)","").split(",");
+            //通过时间校对
+            if(checkTime(weekcount,times)){
+                //添加两个class属性
+                content.classList.add("kb",element[attri[0]]);
+                //课程名
+                var  className = document.createElement("className");
+                className.innerText = element[attri[0]];
+                // 老师
+                var teacher = document.createElement("teacher");
+                teacher.innerText = element[attri[1]];
+                // 上课地点
+                var place = document.createElement("place");
+                place.innerText = element[attri[3]];
+                content.appendChild(className);
+                content.appendChild(teacher);
+                content.appendChild(place);
+                return content;
+            }
+            
+        }
+    }
+    return content;
+}
+
+function checkTime(weekcount,times){
+    for (let j = 0; j < times.length; j++) {
+        const time = times[j];
+        if(include(weekcount,time)){
+            return true;
+        }
+    }
+    return false;
+}
+
+function include(aim,range){
+    var min = range.split('-')[0];
+    var max = range.split('-')[1];
+    if(aim<=max&&aim>=min){
+        return true;
+    }
+    return false;
+}
+
+loadData(value,new Date("2022/11/7"));
+    </script>
+
+</body>
+</html>
