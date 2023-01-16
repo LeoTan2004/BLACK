@@ -27,9 +27,12 @@ public class WebViewProxy implements Viewable {
 
     private void init(@NonNull WebView webView, @Nullable WebViewClient webViewClient, @Nullable WebChromeClient webChromeClient) {
         WebSettings settings = webView.getSettings();
+        webView.canGoBack();
+        webView.canGoForward();
         settings.setAllowFileAccess(true);
         settings.setJavaScriptEnabled(true);
         settings.setSupportZoom(false);
+        settings.setJavaScriptCanOpenWindowsAutomatically(true);
         settings.setDomStorageEnabled(true);
         settings.setUserAgentString("Mozilla/5.0 (Linux; Android 13; sdk_gphone64_x86_64) " +
                 "AppleWebKit/537.36 (KHTML, like Gecko) " +

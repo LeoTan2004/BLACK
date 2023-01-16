@@ -22,7 +22,7 @@ public class JSDatas implements JsInterface{
     }
 
     @JavascriptInterface
-    public String getData(String key,String value){
+    public String getData(String key){
         return DataManager.getInstance().getDatas(name).getString(key);
     }
 }

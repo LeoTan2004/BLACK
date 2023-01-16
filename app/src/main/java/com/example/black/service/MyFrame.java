@@ -1,6 +1,8 @@
 package com.example.black.service;
 
 import android.content.Context;
+import android.content.Intent;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import com.example.black.bean.Viewable;
@@ -12,6 +14,9 @@ import com.example.black.dao.file.FileCopyer;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /**
  * 我的框架
@@ -65,5 +70,22 @@ public class MyFrame implements Runnable{
     public void run() {
         initFile();//将文件向外抽出
         initJsInterface();//添加JS接口
+    }
+
+    public void notifyKB(int keyCode, KeyEvent event){
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            goBack();
+        }
+    }
+
+    public void goBack(){
+        if (view.getWebView().getUrl().contains("index.")){
+//            这里只是返回桌面，但是后台保活
+            Intent home=new Intent(Intent.ACTION_MAIN);
+            home.addCategory(Intent.CATEGORY_HOME);
+            context.startActivity(home);
+        }else{
+            view.getWebView().goBack();
+        }
     }
 }
